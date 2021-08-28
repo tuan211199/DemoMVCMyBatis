@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.repository.PersonRepository">
+    <resultMap id="result" type="Person">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="identityCard" column="identityCard"/>
+        <result property="ward" column="ward"/>
+        <result property="district" column="district"/>
+        <result property="address" column="address"/>
+        <result property="phone" column="phone"/>
+    </resultMap>
+
+
+    <select id="getPerson" parameterType="SearchModel" resultType="Person" resultMap="result">
+        SELECT * FROM people
+        WHERE 1 = 1
+        <if test="name != null">
+            AND name like ${name}
+        </if>
+        <if test="identityCard != null">
+            AND identityCard like ${identityCard}
+        </if>
+    </select>
+
+    <select id="getPersonById" parameterType="int" resultType="Person" resultMap="result">
+        SELECT * FROM people WHERE id = #{id}
+    </select>
+
+    <update id="updatePerson" parameterType="Person">
+        UPDATE people SET name = #{name},  phone = #{phone},
+                          address = #{address}, identityCard = #{identityCard}, district = #{district}, ward = #{ward}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="addPerson" parameterType="Person" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO people(name, phone, address, identityCard, district, ward)
+        VALUES (#{name}, #{phone}, #{address}, #{identityCard}, #{district}, #{ward})
+    </insert>
+
+    <delete id="deletePerson" parameterType="int">
+        DELETE FROM people WHERE id = #{id}
+    </delete>
+</mapper>
